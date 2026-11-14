@@ -1,0 +1,13 @@
+{
+  "expo": {
+    "name": "Style by Rinero",
+    "slug": "style-by-rinero",
+    "scheme": "stylebyrinero",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "automatic",
+    "plugins": ["expo-router"],
+    "ios": { "supportsTablet": true },
+    "android": { "adaptiveIcon": { "backgroundColor": "#0b1118" } }
+  }
+}
