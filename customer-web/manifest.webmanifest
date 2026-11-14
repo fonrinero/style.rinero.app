@@ -1,0 +1,12 @@
+{
+  "id": "/",
+  "name": "Style by Rinero",
+  "short_name": "Style Rinero",
+  "description": "Find and book local beauty, hair and barber professionals.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#0c121b",
+  "theme_color": "#101722",
+  "icons": [{ "src": "/style-icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }]
+}

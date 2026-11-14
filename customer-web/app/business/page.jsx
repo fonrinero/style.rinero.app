@@ -1,0 +1,7 @@
+import Link from 'next/link';
+
+export const metadata = { title: 'Business tools for salons and barbers', description: 'Manage locations, professionals, services, availability, bookings, payments and loyalty with Style by Rinero.' };
+
+export default function BusinessPage() {
+  return <main className="results-page wrap"><Link className="back-link" href="/">← Style by Rinero</Link><div className="results-heading"><span className="eyebrow">BUSINESS SPACE</span><h1>Your team and appointments, in sync.</h1><p>Set up your locations, team, services, prices, schedules and breaks. Keep bookings, customer loyalty and payment reporting together.</p><Link className="button button-orange" href="/business-account">Business sign in / register ↗</Link></div><div className="steps-grid"><article><div>01</div><h3>Build your profile</h3><p>Add shop photos, branches, professionals, service menus and age policies.</p></article><article><div>02</div><h3>Set availability</h3><p>Set individual schedules, breaks, leave and the professionals customers can choose.</p></article><article><div>03</div><h3>Choose payment rules</h3><p>Offer full payment, a deposit, or payment at the shop. Show cancellation terms before booking.</p></article></div><div className="results-empty"><b>Stripe Connect is the planned payment route.</b><p>Live payment collection stays off until a connected account and payment credentials are configured. The agreed platform fee is €0.50 per payment, including deposits.</p></div></main>;
+}

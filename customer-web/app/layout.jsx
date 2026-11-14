@@ -1,0 +1,13 @@
+import './globals.css';
+
+export const metadata = {
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://style.rinero.app'),
+  title: { default: 'Style by Rinero | Find your people. Book your style.', template: '%s | Style by Rinero' },
+  description: 'Find barbers, hair salons, nail studios and wellness professionals in Ireland. Compare services, prices and appointment times, then book online.',
+  openGraph: { title: 'Style by Rinero', description: 'Find your people. Book your style.', type: 'website' },
+  robots: { index: true, follow: true }
+};
+
+export default function RootLayout({ children }) {
+  return <html lang="en"><body>{children}</body></html>;
+}

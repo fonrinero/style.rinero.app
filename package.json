@@ -1,0 +1,12 @@
+{
+  "name": "style-by-rinero",
+  "private": true,
+  "version": "0.2.0",
+  "workspaces": ["customer-web", "customer-app", "business-portal", "server"],
+  "scripts": {
+    "dev:web": "npm run dev --workspace @style/customer-web",
+    "dev:business": "npm run dev --workspace @style/business-portal",
+    "dev:server": "npm run dev --workspace @style/server",
+    "dev:app": "npm run start --workspace @style/customer-app"
+  }
+}

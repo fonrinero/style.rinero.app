@@ -1,0 +1,7 @@
+{
+  "name": "@style/customer-web",
+  "private": true,
+  "version": "0.2.0",
+  "scripts": { "dev": "next dev -p 3100", "build": "next build", "start": "next start -p 3100" },
+  "dependencies": { "@simplewebauthn/browser": "^14.1.0", "next": "^16.2.0", "react": "19.3.0", "react-dom": "19.3.0" }
+}
