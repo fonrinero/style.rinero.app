@@ -1,0 +1,9 @@
+{
+  "name": "@style/server",
+  "private": true,
+  "version": "0.3.0",
+  "type": "commonjs",
+  "scripts": { "dev": "node --watch server.js", "start": "node server.js" },
+  "engines": { "node": ">=22" },
+  "dependencies": { "@simplewebauthn/server": "^14.1.0", "mysql2": "^3.15.0" }
+}
