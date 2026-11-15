@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 900" fill="none">
+<defs>
+ <linearGradient id="night" x1="80" y1="0" x2="680" y2="900" gradientUnits="userSpaceOnUse"><stop stop-color="#211a13"/><stop offset=".43" stop-color="#101114"/><stop offset="1" stop-color="#07080b"/></linearGradient>
+ <radialGradient id="halo" cx="0" cy="0" r="1" gradientTransform="matrix(0 432 -356 0 424 394)" gradientUnits="userSpaceOnUse"><stop stop-color="#c4934b" stop-opacity=".58"/><stop offset=".45" stop-color="#8b5f31" stop-opacity=".27"/><stop offset="1" stop-color="#0b0c0f" stop-opacity="0"/></radialGradient>
+ <linearGradient id="foil" x1="122" y1="55" x2="636" y2="748" gradientUnits="userSpaceOnUse"><stop stop-color="#fff1c3"/><stop offset=".18" stop-color="#d3aa63"/><stop offset=".42" stop-color="#6d4824"/><stop offset=".64" stop-color="#f5d998"/><stop offset=".82" stop-color="#9b6d35"/><stop offset="1" stop-color="#edd18d"/></linearGradient>
+ <linearGradient id="skin" x1="282" y1="272" x2="532" y2="590" gradientUnits="userSpaceOnUse"><stop stop-color="#f0c6a0"/><stop offset=".52" stop-color="#b77e62"/><stop offset="1" stop-color="#704a40"/></linearGradient>
+ <linearGradient id="hair" x1="224" y1="163" x2="574" y2="578" gradientUnits="userSpaceOnUse"><stop stop-color="#08090c"/><stop offset=".38" stop-color="#262127"/><stop offset=".68" stop-color="#111115"/><stop offset="1" stop-color="#050609"/></linearGradient>
+ <linearGradient id="silk" x1="214" y1="566" x2="602" y2="921" gradientUnits="userSpaceOnUse"><stop stop-color="#333038"/><stop offset=".4" stop-color="#19191d"/><stop offset="1" stop-color="#08090c"/></linearGradient>
+ <filter id="blur"><feGaussianBlur stdDeviation="36"/></filter>
+ <filter id="grain"><feTurbulence type="fractalNoise" baseFrequency=".72" numOctaves="3" stitchTiles="stitch"/><feColorMatrix values=".9 0 0 0 .1 .8 0 0 0 .1 .7 0 0 0 .1 0 0 0 .13 0"/></filter>
+ <pattern id="speck" width="94" height="94" patternUnits="userSpaceOnUse"><circle cx="12" cy="17" r="1" fill="#f4dca8" opacity=".55"/><circle cx="71" cy="42" r=".7" fill="#fff3d5" opacity=".38"/><circle cx="39" cy="81" r=".8" fill="#c3944d" opacity=".5"/></pattern>
+</defs>
+<rect width="760" height="900" fill="url(#night)"/>
+<rect width="760" height="900" fill="url(#halo)"/>
+<!-- luminous orbital gold ribbons -->
+<ellipse cx="412" cy="432" rx="341" ry="421" stroke="url(#foil)" stroke-opacity=".58" stroke-width="1.3" transform="rotate(20 412 432)"/>
+<ellipse cx="412" cy="432" rx="305" ry="382" stroke="#f1d08b" stroke-opacity=".22" stroke-width="1" transform="rotate(-24 412 432)"/>
+<path d="M-35 739C120 700 185 587 264 430 342 274 414 106 608 38c45-16 88-21 128-17" stroke="url(#foil)" stroke-width="13" stroke-linecap="round" opacity=".72"/>
+<path d="M-50 778C140 732 223 620 291 479 367 320 449 167 652 111c44-12 79-14 119-10" stroke="#f2cf8c" stroke-opacity=".29" stroke-width="2"/>
+<path d="M32 876c134-52 224-135 290-273 56-117 127-251 277-312" stroke="url(#foil)" stroke-opacity=".53" stroke-width="3"/>
+<path d="M77 179C196 67 320 29 440 61c123 33 197 139 231 253" stroke="#fff0ca" stroke-opacity=".4" stroke-width="1.2" stroke-dasharray="2 9"/>
+<!-- soft gold light bloom -->
+<ellipse cx="444" cy="339" rx="176" ry="204" fill="#d6aa61" opacity=".16" filter="url(#blur)"/>
+<!-- portrait silhouette -->
+<path d="M118 902c14-104 29-179 73-249 48-76 135-112 224-112 111 0 194 58 240 165 24 57 35 121 41 196H118Z" fill="url(#silk)"/>
+<path d="M221 362c-22-143 28-246 127-266 92-19 183 39 209 139 24 91 4 232-33 314-33 73-93 119-160 109-82-13-139-132-143-296Z" fill="url(#hair)"/>
+<path d="M293 349c16-71 57-112 124-111 81 1 133 58 129 143-4 99-43 198-122 212-69 13-132-60-143-153-4-31 0-63 12-91Z" fill="url(#skin)"/>
+<!-- sweeping hair contour -->
+<path d="M264 377c-37-130 11-252 112-288 74-27 162 5 202 74 24 40 36 95 30 146-31-46-74-90-128-104-42-11-79-4-111 25-38 33-67 96-105 147Z" fill="url(#hair)"/>
+<path d="M284 279c38-97 108-139 179-119 44 13 77 43 99 86-48-37-98-51-147-35-45 14-81 45-131 68Z" fill="#493c35" opacity=".42"/>
+<path d="M346 453c24 8 49 8 75 0" stroke="#6b4038" stroke-width="2" stroke-linecap="round" opacity=".5"/>
+<path d="M382 500c22 10 43 9 61-2" stroke="#74483b" stroke-width="2.4" stroke-linecap="round" opacity=".65"/>
+<!-- satin lapel and gilded edge -->
+<path d="M323 616c41 33 89 50 136 43l-44 58 135 185H210l85-201-30-59 58-26Z" fill="#111216"/>
+<path d="m322 616 55 101 39-58m43 0 37-45 51 277" stroke="url(#foil)" stroke-opacity=".68" stroke-width="2"/>
+<path d="M280 684c-31 56-49 126-59 218m287-243c45 62 71 145 84 243" stroke="#d6b16c" stroke-opacity=".24" stroke-width="1"/>
+<!-- jewelry glint -->
+<path d="M548 503c12 17 11 36-2 54-12 16-32 15-43 0" stroke="url(#foil)" stroke-width="2"/>
+<circle cx="515" cy="557" r="5" fill="url(#foil)"/>
+<!-- graphic flares -->
+<g fill="url(#foil)"><path d="M614 218c3 17 7 24 23 27-16 3-20 10-23 27-3-17-7-24-23-27 16-3 20-10 23-27Z"/><path d="M163 459c2 10 4 15 14 17-10 2-12 7-14 17-2-10-4-15-14-17 10-2 12-7 14-17Z"/><circle cx="586" cy="329" r="2.7"/><circle cx="197" cy="328" r="2"/><circle cx="612" cy="641" r="2"/></g>
+<rect width="760" height="900" fill="url(#speck)" opacity=".7"/>
+<rect width="760" height="900" filter="url(#grain)" opacity=".24"/>
+<path d="M.5.5h759v899H.5z" stroke="#f0d9a7" stroke-opacity=".24"/>
+</svg>

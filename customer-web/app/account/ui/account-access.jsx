@@ -20,6 +20,7 @@ async function api(path, payload, method = payload === undefined ? 'GET' : 'POST
 
 export default function AccountAccess() {
   const [mode, setMode] = useState('signin');
+  const [authMethod, setAuthMethod] = useState('password');
   const [form, setForm] = useState({ email: '', first_name: '', last_name: '', phone: '', age: '', gender: 'unspecified' });
   const [user, setUser] = useState(null);
   const [profiles, setProfiles] = useState([]);
@@ -35,7 +36,14 @@ export default function AccountAccess() {
   async function run(event) {
     event.preventDefault(); setBusy(true); setError(''); setMessage('');
     try {
-      if (mode === 'register') {
+      if (authMethod === 'password' && mode === 'register') {
+        const payload = { email: form.email, password: form.password, display_name: `${form.first_name.trim()} ${form.last_name.trim()}`.trim(), phone: form.phone.trim(), age: form.age === '' ? null : Number(form.age), gender: form.gender };
+        const result = await api('auth/password/register', payload);
+        setUser(result.user); setProfiles([]); setMessage('Your account is ready.');
+      } else if (authMethod === 'password') {
+        const result = await api('auth/password/login', { email: form.email, password: form.password });
+        setUser(result.user); setMessage('You are signed in.');
+      } else if (mode === 'register') {
         const payload = {
           email: form.email,
           display_name: `${form.first_name.trim()} ${form.last_name.trim()}`.trim(),
@@ -53,7 +61,7 @@ export default function AccountAccess() {
         const result = await api('auth/login/verify', credential);
         setUser(result.user); setMessage('You are signed in.');
       }
-    } catch (err) { setError(err.message || 'Passkey sign-in was cancelled or failed.'); }
+    } catch (err) { setError(err.message || (authMethod === 'passkey' ? 'Passkey sign-in was cancelled or failed.' : 'Email and password could not be accepted.')); }
     finally { setBusy(false); }
   }
   async function logout() {
@@ -83,10 +91,10 @@ export default function AccountAccess() {
 
   return <>
     <Link className="back-link" href="/">← Style by Rinero</Link>
-    <div className="results-heading"><span className="eyebrow">CUSTOMER ACCOUNT</span><h1>{user ? `Hello, ${user.display_name}.` : mode === 'register' ? 'Create your account.' : 'Welcome back.'}</h1><p>{user ? 'Your secure sign-in uses a passkey on your device.' : 'Use a passkey with Face ID, Touch ID, or your device PIN. No account password to remember.'}</p></div>
+    <div className="results-heading"><span className="eyebrow">CUSTOMER ACCOUNT</span><h1>{user ? `Hello, ${user.display_name}.` : mode === 'register' ? 'Create your account.' : 'Welcome back.'}</h1><p>{user ? 'Your account is ready for your next appointment.' : 'Sign in with an email and password, or use a passkey on your phone or computer.'}</p></div>
     {error && <div className="account-alert error" role="alert">{error}</div>}
     {message && <div className="account-alert success" role="status">{message}</div>}
-    {user ? <><section className="account-panel"><b>{user.email}</b><p>Signed in with your passkey.</p><button className="button button-orange" disabled={busy} onClick={logout}>{busy ? 'Please wait…' : 'Sign out'}</button></section>
+    {user ? <><section className="account-panel"><b>{user.email}</b><p>Signed in to your Style by Rinero account.</p><button className="button button-orange" disabled={busy} onClick={logout}>{busy ? 'Please wait…' : 'Sign out'}</button></section>
       <BookingHistory />
       <section className="account-panel family-panel"><div className="family-heading"><div><span className="eyebrow">BOOK FOR YOUR FAMILY</span><h2>Family profiles</h2><p>Add up to five people. Choose who the appointment is for when booking.</p></div><span className="family-count">{profiles.length}/5</span></div>
         {profiles.length ? <div className="family-list">{profiles.map((profile) => editingProfile?.id === profile.id ? <form className="family-item family-editor" key={profile.id} onSubmit={saveProfile}>
@@ -98,10 +106,13 @@ export default function AccountAccess() {
         <div className="account-fields"><label>First name<input name="first_name" autoComplete="given-name" required maxLength="80" value={form.first_name} onChange={update}/></label><label>Last name<input name="last_name" autoComplete="family-name" required maxLength="80" value={form.last_name} onChange={update}/></label></div>
         <label>Phone number<input name="phone" type="tel" autoComplete="tel" required value={form.phone} onChange={update} maxLength="32"/></label>
         <div className="account-fields"><label>Age<input name="age" type="number" min="13" max="120" value={form.age} onChange={update}/></label><label>Gender<select name="gender" value={form.gender} onChange={update}><option value="unspecified">Prefer not to say</option><option value="male">Man</option><option value="female">Woman</option><option value="nonbinary">Non-binary</option></select></label></div>
-        <p className="account-help">Family profiles for children can be added after account setup. Your passkey stays with your device or password manager.</p>
+        <p className="account-help">Family profiles for children can be added after account setup.</p>
       </>}
       <label>Email address<input name="email" type="email" autoComplete="email" required maxLength="254" value={form.email} onChange={update}/></label>
-      <button className="button button-orange account-submit" disabled={busy}>{busy ? 'Waiting for your device…' : mode === 'register' ? 'Create account with passkey' : 'Continue with passkey'}</button>
+      <div className="auth-methods" role="group" aria-label="Sign-in method"><button type="button" className={authMethod === 'password' ? 'selected' : ''} onClick={() => setAuthMethod('password')}>Email & password</button><button type="button" className={authMethod === 'passkey' ? 'selected' : ''} onClick={() => setAuthMethod('passkey')}>Passkey</button></div>
+      {authMethod === 'password' && <label>Password<input name="password" type="password" autoComplete={mode === 'register' ? 'new-password' : 'current-password'} minLength="10" maxLength="128" required value={form.password || ''} onChange={update}/></label>}
+      {authMethod === 'password' && mode === 'register' && <p className="account-help">Use at least 10 characters. Password reset is not available yet.</p>}
+      <button className="button button-orange account-submit" disabled={busy}>{busy ? (authMethod === 'passkey' ? 'Waiting for your device…' : 'Please wait…') : authMethod === 'passkey' ? (mode === 'register' ? 'Create account with passkey' : 'Continue with passkey') : (mode === 'register' ? 'Create account' : 'Sign in')}</button>
       <button type="button" className="account-switch" onClick={() => { setMode(mode === 'register' ? 'signin' : 'register'); setError(''); setMessage(''); }}>{mode === 'register' ? 'Already registered? Sign in' : 'New to Style? Create an account'}</button>
     </form>}
   </>;

@@ -4,6 +4,7 @@ USE style_rinero;
 CREATE TABLE IF NOT EXISTS users (
   id CHAR(36) PRIMARY KEY,
   email VARCHAR(254) NOT NULL UNIQUE,
+  password_hash VARCHAR(200) NULL,
   display_name VARCHAR(160) NOT NULL,
   phone VARCHAR(32) NULL,
   gender ENUM('male','female','nonbinary','unspecified') NOT NULL DEFAULT 'unspecified',

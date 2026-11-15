@@ -40,7 +40,7 @@ export default function BookingPanel({ shopId }) {
   }
   async function book() {
     if (!selected) return;
-    if (!user) { setError('Sign in with your passkey before booking.'); return; }
+    if (!user) { setError('Sign in to your customer account before booking.'); return; }
     setSaving(true); setError('');
     try {
       const result = await api('bookings', { method: 'POST', body: JSON.stringify({ service_id: serviceId, location_id: locationId, professional_id: selected.professional_id, starts_at: selected.starts_at, local_date: date, family_profile_id: profileId === 'self' ? null : profileId }) });
@@ -55,7 +55,7 @@ export default function BookingPanel({ shopId }) {
   if (booking) return <section className="booking-panel booking-confirmation"><span className="eyebrow">BOOKING CONFIRMED</span><h2>You’re booked.</h2><p>Show this code if the shop asks for your booking details.</p><strong className="booking-code">{booking.public_code}</strong><dl><div><dt>Service</dt><dd>{booking.service_name}</dd></div><div><dt>With</dt><dd>{booking.professional_name}</dd></div><div><dt>Location</dt><dd>{booking.location_name} · {booking.city}</dd></div><div><dt>Starts</dt><dd>{new Date(booking.starts_at).toLocaleString(undefined,{dateStyle:'medium',timeStyle:'short'})}</dd></div><div><dt>Payment</dt><dd>{booking.payment_mode === 'onsite' ? `Pay at shop · ${money(booking.price_cents)}` : 'Payment status unavailable'}</dd></div></dl><button className="button button-outline" onClick={() => setBooking(null)}>Book another appointment</button></section>;
   return <section className="booking-panel" id="book">
     <div className="booking-panel-heading"><div><span className="eyebrow">BOOK AN APPOINTMENT</span><h2>Choose a service and time.</h2><p>Times shown use the shop’s local time. {data.business.payment_mode === 'onsite' ? 'Payment is due at the shop.' : 'This shop requires online payment, but checkout is not available yet.'}</p></div><span className="booking-pill">{data.business.cancellation_hours}h cancellation rule</span></div>
-    {!user && <div className="booking-signin"><span>Sign in with your passkey to book and manage appointments.</span><Link className="button button-outline" href={`/account?next=${encodeURIComponent(`/shops/${shopId}#book`)}`}>Customer sign in</Link></div>}
+    {!user && <div className="booking-signin"><span>Sign in with your email and password or a passkey to book and manage appointments.</span><Link className="button button-outline" href={`/account?next=${encodeURIComponent(`/shops/${shopId}#book`)}`}>Customer sign in</Link></div>}
     {user && <label className="booking-field">Who is this appointment for?<select value={profileId} onChange={(event) => setProfileId(event.target.value)}><option value="self">Me · {user.display_name}</option>{profiles.map((profile) => <option key={profile.id} value={profile.id}>{profile.name} · {profile.age}</option>)}</select></label>}
     {data.business.accepts_children && <p className="booking-note">Children accepted{data.business.minimum_child_age != null ? ` from age ${data.business.minimum_child_age}` : ''}.</p>}
     <form className="booking-form" onSubmit={findTimes}>

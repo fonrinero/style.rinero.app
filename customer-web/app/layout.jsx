@@ -1,4 +1,6 @@
 import './globals.css';
+import { LanguageProvider } from './ui/language-provider';
+import SiteHeader from './ui/site-header';
 
 export const metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://style.rinero.app'),
@@ -9,5 +11,5 @@ export const metadata = {
 };
 
 export default function RootLayout({ children }) {
-  return <html lang="en"><body>{children}</body></html>;
+  return <html lang="en"><body><LanguageProvider><SiteHeader/>{children}</LanguageProvider></body></html>;
 }

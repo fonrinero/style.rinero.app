@@ -81,6 +81,16 @@ function sessionCookie(token,maxAge=SESSION_DAYS*86400) {
 }
 function hash(value) { return crypto.createHash('sha256').update(value).digest(); }
 function digestEqual(a,b) { return a.length===b.length && crypto.timingSafeEqual(a,b); }
+function passwordHash(password) {
+  const salt=crypto.randomBytes(16);
+  return new Promise((resolve,reject)=>crypto.scrypt(password,salt,64,(err,key)=>err?reject(err):resolve(`scrypt$${salt.toString('base64url')}$${key.toString('base64url')}`)));
+}
+function verifyPassword(password,stored) {
+  const [scheme,salt,key]=String(stored||'').split('$');
+  if(scheme!=='scrypt'||!salt||!key) return Promise.resolve(false);
+  const expected=Buffer.from(key,'base64url');
+  return new Promise((resolve,reject)=>crypto.scrypt(password,Buffer.from(salt,'base64url'),expected.length,(err,actual)=>err?reject(err):resolve(actual.length===expected.length&&crypto.timingSafeEqual(actual,expected))));
+}
 function challengeFromResponse(response) {
   try { return JSON.parse(Buffer.from(response.response.clientDataJSON,'base64url').toString('utf8')).challenge; }
   catch { throw Object.assign(new Error('Invalid passkey response.'),{status:400}); }
@@ -164,13 +174,35 @@ async function getOpenSlots({serviceId,locationId,date,professionalId}){
 }
 async function requireUser(req,res,roles) {
   const user=await currentUser(req);
-  if(!user){send(res,401,{error:'Sign in with your passkey first.'});return null;}
+  if(!user){send(res,401,{error:'Sign in to your customer account first.'});return null;}
   if(roles && !roles.includes(user.role)){send(res,403,{error:'This account does not have access to that area.'});return null;}
   return user;
 }
 
 async function authApi(req,res,p) {
   if(req.method==='POST') assertSameOrigin(req);
+  if(p==='/api/v1/auth/password/register'&&req.method==='POST') {
+    if(!rateLimit(req,'password-reg',8)) return send(res,429,{error:'Too many attempts. Try again later.'});
+    const input=await bodyJson(req); const email=String(input.email||'').trim().toLowerCase(); const password=String(input.password||'');
+    const displayName=String(input.display_name||'').trim(); const phone=String(input.phone||'').trim(); const digits=phone.replace(/\D/g,'');
+    if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)||email.length>254||displayName.length<2||displayName.length>160) return send(res,400,{error:'Enter a valid email and your first and last name.'});
+    if(password.length<10||password.length>128) return send(res,400,{error:'Choose a password between 10 and 128 characters.'});
+    if(!/^\+?[0-9\s().-]{7,32}$/.test(phone)||digits.length<7||digits.length>15) return send(res,400,{error:'Enter a valid phone number, including the country code.'});
+    const exists=await query('SELECT id FROM users WHERE email=? LIMIT 1',[email]); if(exists.length) return send(res,409,{error:'An account already exists for this email. Sign in instead.'});
+    const userId=uuid(),gender=['male','female','nonbinary','unspecified'].includes(input.gender)?input.gender:'unspecified',age=Number.isInteger(input.age)&&input.age>=13&&input.age<=120?input.age:null;
+    const encoded=await passwordHash(password);
+    await query('INSERT INTO users(id,email,display_name,phone,gender,age,role,password_hash) VALUES(?,?,?,?,?,?,\'customer\',?)',[userId,email,displayName,phone,gender,age,encoded]);
+    await issueSession(res,userId); const users=await query('SELECT id,email,display_name,phone,gender,age,role,preferred_language FROM users WHERE id=?',[userId]);
+    return send(res,201,{user:users[0]});
+  }
+  if(p==='/api/v1/auth/password/login'&&req.method==='POST') {
+    if(!rateLimit(req,'password-login',8)) return send(res,429,{error:'Too many attempts. Try again later.'});
+    const input=await bodyJson(req),email=String(input.email||'').trim().toLowerCase(),password=String(input.password||'');
+    const rows=await query('SELECT id,password_hash FROM users WHERE email=? LIMIT 1',[email]);
+    if(!rows.length||!rows[0].password_hash||!await verifyPassword(password,rows[0].password_hash)) return send(res,401,{error:'Email or password is incorrect.'});
+    await issueSession(res,rows[0].id); const users=await query('SELECT id,email,display_name,phone,gender,age,role,preferred_language FROM users WHERE id=?',[rows[0].id]);
+    return send(res,200,{user:users[0]});
+  }
   if(p==='/api/v1/auth/register/options'&&req.method==='POST') {
     if(!rateLimit(req,'reg')) return send(res,429,{error:'Too many attempts. Try again later.'});
     const input=await bodyJson(req); const email=String(input.email||'').trim().toLowerCase(); const displayName=String(input.display_name||'').trim(); const phone=String(input.phone||'').trim(); const phoneDigits=phone.replace(/\D/g,'');
@@ -179,7 +211,7 @@ async function authApi(req,res,p) {
     const accountType=input.account_type==='business'?'business':'customer';
     const businessName=String(input.business_name||'').trim(); const businessCategory=String(input.business_category||'').trim();
     if(accountType==='business'&&(businessName.length<2||businessName.length>180||businessCategory.length<2||businessCategory.length>50))return send(res,400,{error:'Enter your business name and category.'});
-    const exists=await query('SELECT id FROM users WHERE email=? LIMIT 1',[email]); if(exists.length) return send(res,409,{error:'An account already exists for this email. Sign in with its passkey.'});
+    const exists=await query('SELECT id FROM users WHERE email=? LIMIT 1',[email]); if(exists.length) return send(res,409,{error:'An account already exists for this email. Sign in with its passkey or password.'});
     const userId=uuid(); const gender=['male','female','nonbinary','unspecified'].includes(input.gender)?input.gender:'unspecified'; const age=Number.isInteger(input.age)&&input.age>=13&&input.age<=120?input.age:null;
     await query('INSERT INTO users(id,email,display_name,phone,gender,age,role) VALUES(?,?,?,?,?,?,?)',[userId,email,displayName,phone,gender,age,accountType==='business'?'business_owner':'customer']);
     if(accountType==='business'){
