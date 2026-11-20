@@ -42,3 +42,62 @@ body:has(.home-redesign){background:#f6f1e8;color:#24291f;--home-ink:#24291f;--h
 .home-topbar .top-actions select,.home-topbar .icon-button{border-color:#24291f22;background:#fffdf8;color:#24291f}.home-footer{border-color:#24291f1b;color:#24291f}.home-footer>div{color:#687063}
 .shop-map-section{margin-top:30px}.shop-map-heading{display:flex;align-items:end;justify-content:space-between;gap:16px;margin-bottom:12px}.shop-map-heading h2{margin:5px 0 0;font:700 22px Manrope,sans-serif}.shop-map-heading>span{padding:7px 10px;border:1px solid var(--line);border-radius:999px;color:var(--muted);font-size:11px}.shop-map{width:100%;height:430px;overflow:hidden;border:1px solid var(--line);border-radius:18px;background:var(--surface-2)}.shop-map-state{margin-top:10px;padding:14px 16px;border:1px solid var(--line);border-radius:12px;background:var(--surface);color:var(--muted);font-size:13px}.shop-map-state b{color:var(--text)}.shop-map-state p{margin:5px 0 0}.shop-map-state code{color:var(--text)}.shop-map-popup{max-width:230px;padding:4px 2px;color:#171717;font:13px Arial,sans-serif}.shop-map-popup p{margin:6px 0;color:#555}.shop-map-popup a{color:#735522;font-weight:700}
 @media(max-width:700px){.shop-map{height:350px}.shop-map-heading h2{font-size:19px}}
+
+/* Dark Rstyle homepage: the saved theme is the source of truth. */
+html[data-theme="dark"] body:has(.home-redesign){background:radial-gradient(ellipse at 77% 6%,#17637338,transparent 36rem),radial-gradient(ellipse at 13% 42%,#5333192b,transparent 30rem),#080b10;color:#f4f0e8}
+html[data-theme="dark"] .home-topbar{background:#080b10ed;border-color:#c5a15b35;color:#f4f0e8}
+html[data-theme="dark"] .home-topbar nav{color:#a6b2b8}
+html[data-theme="dark"] .home-topbar .brand-icon{background:linear-gradient(140deg,#54d5cf,#c69b54)!important;color:#071013!important;border-color:#d4b777}
+html[data-theme="dark"] .home-topbar .button-orange{background:linear-gradient(110deg,#64d5cf,#c6a15e);color:#081012}
+html[data-theme="dark"] .home-topbar .top-actions select,html[data-theme="dark"] .home-topbar .icon-button{background:#111820;color:#f4f0e8;border-color:#56616a}
+html[data-theme="dark"] .home-redesign .eyebrow{color:#b7c2c2}
+html[data-theme="dark"] .home-redesign .live-dot{background:#5ed8ce;box-shadow:0 0 0 5px #5ed8ce24,0 0 18px #5ed8ce}
+html[data-theme="dark"] .home-redesign .hero h1,html[data-theme="dark"] .home-redesign .category-intro h2,html[data-theme="dark"] .home-redesign .section-heading h2{color:#f4f0e8}
+html[data-theme="dark"] .home-redesign .hero h1 em,html[data-theme="dark"] .home-redesign .business-copy h2 em{color:#6ddbd2}
+html[data-theme="dark"] .home-redesign .hero-copy>p,html[data-theme="dark"] .home-redesign .business-copy>p{color:#b0b9bc}
+html[data-theme="dark"] .home-redesign .searchbar{background:#111820;border-color:#657079;border-radius:14px;box-shadow:0 24px 65px #0008}
+html[data-theme="dark"] .home-redesign .searchbar label{color:#70dcd4}
+html[data-theme="dark"] .home-redesign .searchbar label+label{border-color:#ffffff20}
+html[data-theme="dark"] .home-redesign .searchbar input{color:#f6f2eb}
+html[data-theme="dark"] .home-redesign .searchbar input::placeholder{color:#a5b0b5}
+html[data-theme="dark"] .home-redesign .searchbar .button,html[data-theme="dark"] .home-redesign .business-copy .button{background:linear-gradient(115deg,#72ded4,#b8a16b);color:#091113;border-radius:10px;box-shadow:0 10px 30px #43bdb52b}
+html[data-theme="dark"] .home-redesign .hero-proof{color:#aeb9bd}
+html[data-theme="dark"] .home-redesign .hero-proof b,html[data-theme="dark"] .home-redesign .text-link{color:#72ded4}
+html[data-theme="dark"] .home-redesign .hero-proof i{background:#59666d}
+html[data-theme="dark"] .campaign-art{border-color:#70dcd454;box-shadow:0 35px 100px #000b,0 0 70px #1a9f9a24}
+html[data-theme="dark"] .campaign-art:before{border-color:#70dcd43c}
+html[data-theme="dark"] .campaign-stamp{border-color:#70dcd4;background:#0c1419ed;color:#a6eee7}
+html[data-theme="dark"] .campaign-note{border-color:#70dcd455;background:#0b1218ed}
+html[data-theme="dark"] .campaign-note span{color:#83e5dc}
+html[data-theme="dark"] .home-redesign .float-tag{background:#101920;color:#bbf5ef;border-color:#70dcd44d}
+html[data-theme="dark"] .home-redesign .tag-two{color:#edc67b}
+html[data-theme="dark"] .home-redesign .category-card{background:linear-gradient(145deg,#141c22,#0e1419);border-color:#ffffff20;border-radius:14px}
+html[data-theme="dark"] .home-redesign .category-icon{background:#55d4cc20;color:#7de4db}
+html[data-theme="dark"] .home-redesign .category-card b{color:#f4f0e8}
+html[data-theme="dark"] .home-redesign .category-card small{color:#a9b4b8}
+html[data-theme="dark"] .home-redesign .category-card>i{color:#e5bd72}
+html[data-theme="dark"] .home-redesign .how-section{background:linear-gradient(180deg,#0d171b,#0a1015);border-color:#ffffff16}
+html[data-theme="dark"] .home-redesign .steps-grid article,html[data-theme="dark"] .home-redesign .business-panel,html[data-theme="dark"] .home-redesign .schedule-card,html[data-theme="dark"] .home-redesign .opportunity-card{background:linear-gradient(145deg,#151e24,#0e151a);border-color:#ffffff20;color:#f4f0e8;border-radius:16px;box-shadow:0 18px 44px #0004}
+html[data-theme="dark"] .home-redesign .steps-grid article>div,html[data-theme="dark"] .home-redesign .opportunity-card>span{background:#58d5cc20;color:#78e2da;border-radius:12px}
+html[data-theme="dark"] .home-redesign .steps-grid article>span{color:#82949b}
+html[data-theme="dark"] .home-redesign .steps-grid p,html[data-theme="dark"] .home-redesign .opportunity-card p,html[data-theme="dark"] .home-redesign .section-heading p{color:#aeb9bd}
+html[data-theme="dark"] .home-redesign .business-panel{background:radial-gradient(ellipse at 97% 3%,#147e7a30,transparent 52%),linear-gradient(135deg,#151e24,#0c1217)}
+html[data-theme="dark"] .home-redesign .business-copy h2{color:#f4f0e8}
+html[data-theme="dark"] .home-redesign .schedule-head span{color:#7de4db}
+html[data-theme="dark"] .home-redesign .schedule-row{border-color:#ffffff18}
+html[data-theme="dark"] .home-redesign .schedule-row time,html[data-theme="dark"] .home-redesign .schedule-row small,html[data-theme="dark"] .home-redesign .schedule-foot{color:#a8b5ba}
+html[data-theme="dark"] .home-redesign .schedule-row>i{background:#526269}
+html[data-theme="dark"] .home-redesign .schedule-accent{color:#edc67b}
+html[data-theme="dark"] .home-redesign .schedule-foot i{background:#70dcd4;box-shadow:0 0 14px #70dcd4}
+html[data-theme="dark"] .home-redesign .opportunity-card.warm>span{background:#e3bd7220;color:#f0cc83}
+html[data-theme="dark"] .home-redesign .category-card:hover,html[data-theme="dark"] .home-redesign .opportunity-card:hover{border-color:#71ddd5;box-shadow:0 15px 38px #0007}
+html[data-theme="dark"] .home-footer{border-color:#ffffff20;color:#f4f0e8}
+html[data-theme="dark"] .home-footer>div{color:#aeb9bd}
+
+/* Style by Rinero identity: supplied blue and gold R mark with editorial seal treatment. */
+.brand img.brand-logo-image{display:block;width:58px;height:58px;flex:none;object-fit:contain;border:1px solid #d9bd81;border-radius:50%;padding:2px;background:#080d13!important;box-shadow:0 0 0 4px #d9bd8118,inset 0 0 0 3px #d9bd811c}
+.brand-wordmark{font-family:Georgia,serif;font-size:16px;font-weight:600;letter-spacing:.11em}
+.brand-wordmark small{font-family:Manrope,sans-serif;font-size:7px;font-weight:600;letter-spacing:.27em}
+html[data-theme="light"] .brand img.brand-logo-image{background:#111820!important}
+.home-topbar .brand img.brand-logo-image{background:#080d13!important}
+html[data-theme="dark"] .home-topbar .brand img.brand-logo-image{background:#080d13!important}

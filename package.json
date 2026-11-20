@@ -3,6 +3,11 @@
   "private": true,
   "version": "0.2.0",
   "workspaces": ["customer-web", "customer-app", "business-portal", "server"],
+  "overrides": {
+    "@expo/fingerprint": {
+      "minimatch": "11.0.1"
+    }
+  },
   "scripts": {
     "dev:web": "npm run dev --workspace @style/customer-web",
     "dev:business": "npm run dev --workspace @style/business-portal",

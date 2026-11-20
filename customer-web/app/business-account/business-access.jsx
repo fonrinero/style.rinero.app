@@ -18,12 +18,13 @@ async function api(path, payload, method = payload === undefined ? 'GET' : 'POST
 
 const categories = ['Barbershop','Hair salon','Nail salon','Beauty salon','Massage studio','Other'];
 
-export default function BusinessAccess() {
-  const [mode, setMode] = useState('signin');
-  const [form, setForm] = useState({ firstName: '', lastName: '', email: '', phone: '', businessName: '', category: 'Barbershop' });
+export default function BusinessAccess({ verifiedEmail = '', existingAccount = false, initialMode = 'signin' }) {
+  const [mode, setMode] = useState(existingAccount ? 'signin' : verifiedEmail || initialMode === 'register' ? 'register' : 'signin');
+  const [form, setForm] = useState({ firstName: '', lastName: '', email: verifiedEmail, phone: '', businessName: '', category: 'Barbershop' });
   const [businesses, setBusinesses] = useState([]);
   const [user, setUser] = useState(null);
   const [error, setError] = useState('');
+  const [message, setMessage] = useState('');
   const [busy, setBusy] = useState(false);
 
   function update(event) { setForm({ ...form, [event.target.name]: event.target.value }); }
@@ -33,9 +34,14 @@ export default function BusinessAccess() {
   }
 
   async function submit(event) {
-    event.preventDefault(); setBusy(true); setError('');
+    event.preventDefault(); setBusy(true); setError(''); setMessage('');
     try {
       if (mode === 'register') {
+        if (!verifiedEmail) {
+          await api('auth/email/request', { email: form.email, return_to: '/business-account' });
+          setMessage('If this email can be used, a verification link has been sent. Open it on this device to continue registration.');
+          return;
+        }
         const displayName = `${form.firstName.trim()} ${form.lastName.trim()}`.trim();
         const optionsJSON = await api('auth/register/options', {
           account_type: 'business', email: form.email, display_name: displayName, phone: form.phone,
@@ -68,6 +74,7 @@ export default function BusinessAccess() {
 
   return <form className="account-panel account-form business-access-panel" onSubmit={submit}>
     {error && <div className="account-alert error" role="alert">{error}</div>}
+    {message && <div className="account-alert success" role="status">{message}</div>}
     <div><span className="eyebrow">{mode === 'register' ? 'NEW BUSINESS' : 'BUSINESS ACCESS'}</span><h2>{mode === 'register' ? 'Create your owner account.' : 'Sign in to your shop.'}</h2><p>{mode === 'register' ? 'Your passkey protects the business account. You can add staff after setup.' : 'Use the passkey saved on your device or password manager.'}</p></div>
     {mode === 'register' && <>
       <div className="account-fields"><label>First name<input name="firstName" autoComplete="given-name" required maxLength="80" value={form.firstName} onChange={update}/></label><label>Last name<input name="lastName" autoComplete="family-name" required maxLength="80" value={form.lastName} onChange={update}/></label></div>
@@ -75,8 +82,9 @@ export default function BusinessAccess() {
       <label>Business name<input name="businessName" required maxLength="180" value={form.businessName} onChange={update}/></label>
       <label>Business type<select name="category" value={form.category} onChange={update}>{categories.map((category) => <option key={category}>{category}</option>)}</select></label>
     </>}
-    <label>Email address<input name="email" type="email" autoComplete="email" required maxLength="254" value={form.email} onChange={update}/></label>
+    <label>Email address<input name="email" type="email" autoComplete="email" required maxLength="254" value={form.email} readOnly={Boolean(mode === 'register' && verifiedEmail && !existingAccount)} onChange={update}/></label>
+    {verifiedEmail && !existingAccount && mode === 'register' && <p className="account-help">Email verified. Complete your owner account setup below.</p>}
     <button className="button button-orange account-submit" disabled={busy}>{busy ? 'Waiting for your device…' : mode === 'register' ? 'Create owner account with passkey' : 'Continue with passkey'}</button>
-    <button type="button" className="account-switch" onClick={() => { setMode(mode === 'register' ? 'signin' : 'register'); setError(''); }}>{mode === 'register' ? 'Already have a business account? Sign in' : 'New business? Create an owner account'}</button>
+    {!existingAccount && <button type="button" className="account-switch" onClick={() => { setMode(mode === 'register' ? 'signin' : 'register'); setError(''); }}>{mode === 'register' ? 'Already have a business account? Sign in' : 'New business? Create an owner account'}</button>}
   </form>;
 }

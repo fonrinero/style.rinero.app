@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useMemo, useRef, useState } from 'react';
+import { T } from '../ui/language-provider';
 
 let mapsLibraryPromise;
 
@@ -43,7 +44,8 @@ export default function ShopMap({ shops }) {
       const map = new Map(mapElement.current, {
         center: locations[0]?.position || fallbackCenter,
         zoom: locations.length === 1 ? 14 : 11,
-        mapTypeId: 'satellite',
+        // Hybrid retains satellite imagery while adding street and place labels.
+        mapTypeId: 'hybrid',
         mapTypeControl: true,
         mapTypeControlOptions: { mapTypeIds: ['satellite', 'hybrid', 'roadmap'] },
         fullscreenControl: true,
@@ -91,7 +93,7 @@ export default function ShopMap({ shops }) {
   }, [apiKey, locations]);
 
   return <section className="shop-map-section" aria-label="Shop locations map">
-    <div className="shop-map-heading"><div><span className="eyebrow">EXPLORE THE AREA</span><h2>Shops on the map</h2></div><span>Satellite view</span></div>
+    <div className="shop-map-heading"><div><span className="eyebrow"><T>EXPLORE THE AREA</T></span><h2><T>Shops on the map</T></h2></div><span><T>Satellite with street names</T></span></div>
     {!apiKey ? <div className="shop-map-state"><b>Map setup needed</b><p>Add <code>NEXT_PUBLIC_GOOGLE_MAPS_API_KEY</code> to the customer website environment, then rebuild the site.</p></div>
       : <><div className="shop-map" ref={mapElement} role="application" aria-label="Satellite map showing local shops" />
         {error ? <div className="shop-map-state" role="status">{error}</div>

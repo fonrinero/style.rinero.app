@@ -10,6 +10,9 @@ export const metadata = {
   robots: { index: true, follow: true }
 };
 
+// A per-request nonce is required for inline Next.js bootstrap scripts.
+export const dynamic = 'force-dynamic';
+
 export default function RootLayout({ children }) {
-  return <html lang="en"><body><LanguageProvider><SiteHeader/>{children}</LanguageProvider></body></html>;
+  return <html lang="en" data-theme="dark"><body><LanguageProvider><SiteHeader/>{children}</LanguageProvider></body></html>;
 }

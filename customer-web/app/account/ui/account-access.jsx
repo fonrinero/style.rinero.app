@@ -18,10 +18,10 @@ async function api(path, payload, method = payload === undefined ? 'GET' : 'POST
   return data;
 }
 
-export default function AccountAccess() {
-  const [mode, setMode] = useState('signin');
+export default function AccountAccess({ verifiedEmail = '', existingAccount = false }) {
+  const [mode, setMode] = useState(verifiedEmail && !existingAccount ? 'register' : 'signin');
   const [authMethod, setAuthMethod] = useState('password');
-  const [form, setForm] = useState({ email: '', first_name: '', last_name: '', phone: '', age: '', gender: 'unspecified' });
+  const [form, setForm] = useState({ email: verifiedEmail, first_name: '', last_name: '', phone: '', age: '', gender: 'unspecified' });
   const [user, setUser] = useState(null);
   const [profiles, setProfiles] = useState([]);
   const [profileForm, setProfileForm] = useState({ name: '', age: '', gender: 'unspecified' });
@@ -37,6 +37,11 @@ export default function AccountAccess() {
     event.preventDefault(); setBusy(true); setError(''); setMessage('');
     try {
       if (authMethod === 'password' && mode === 'register') {
+        if (!verifiedEmail) {
+          await api('auth/email/request', { email: form.email, return_to: '/account' });
+          setMessage('If this email can be used, a verification link has been sent. Open it on this device to continue registration.');
+          return;
+        }
         const payload = { email: form.email, password: form.password, display_name: `${form.first_name.trim()} ${form.last_name.trim()}`.trim(), phone: form.phone.trim(), age: form.age === '' ? null : Number(form.age), gender: form.gender };
         const result = await api('auth/password/register', payload);
         setUser(result.user); setProfiles([]); setMessage('Your account is ready.');
@@ -44,6 +49,11 @@ export default function AccountAccess() {
         const result = await api('auth/password/login', { email: form.email, password: form.password });
         setUser(result.user); setMessage('You are signed in.');
       } else if (mode === 'register') {
+        if (!verifiedEmail) {
+          await api('auth/email/request', { email: form.email, return_to: '/account' });
+          setMessage('If this email can be used, a verification link has been sent. Open it on this device to continue registration.');
+          return;
+        }
         const payload = {
           email: form.email,
           display_name: `${form.first_name.trim()} ${form.last_name.trim()}`.trim(),
@@ -108,12 +118,13 @@ export default function AccountAccess() {
         <div className="account-fields"><label>Age<input name="age" type="number" min="13" max="120" value={form.age} onChange={update}/></label><label>Gender<select name="gender" value={form.gender} onChange={update}><option value="unspecified">Prefer not to say</option><option value="male">Man</option><option value="female">Woman</option><option value="nonbinary">Non-binary</option></select></label></div>
         <p className="account-help">Family profiles for children can be added after account setup.</p>
       </>}
-      <label>Email address<input name="email" type="email" autoComplete="email" required maxLength="254" value={form.email} onChange={update}/></label>
+      <label>Email address<input name="email" type="email" autoComplete="email" required maxLength="254" value={form.email} readOnly={Boolean(mode === 'register' && verifiedEmail && !existingAccount)} onChange={update}/></label>
+      {mode === 'register' && verifiedEmail && <p className="account-help">Email verified. Complete your account setup below.</p>}
       <div className="auth-methods" role="group" aria-label="Sign-in method"><button type="button" className={authMethod === 'password' ? 'selected' : ''} onClick={() => setAuthMethod('password')}>Email & password</button><button type="button" className={authMethod === 'passkey' ? 'selected' : ''} onClick={() => setAuthMethod('passkey')}>Passkey</button></div>
       {authMethod === 'password' && <label>Password<input name="password" type="password" autoComplete={mode === 'register' ? 'new-password' : 'current-password'} minLength="10" maxLength="128" required value={form.password || ''} onChange={update}/></label>}
       {authMethod === 'password' && mode === 'register' && <p className="account-help">Use at least 10 characters. Password reset is not available yet.</p>}
       <button className="button button-orange account-submit" disabled={busy}>{busy ? (authMethod === 'passkey' ? 'Waiting for your device…' : 'Please wait…') : authMethod === 'passkey' ? (mode === 'register' ? 'Create account with passkey' : 'Continue with passkey') : (mode === 'register' ? 'Create account' : 'Sign in')}</button>
-      <button type="button" className="account-switch" onClick={() => { setMode(mode === 'register' ? 'signin' : 'register'); setError(''); setMessage(''); }}>{mode === 'register' ? 'Already registered? Sign in' : 'New to Style? Create an account'}</button>
+      {!existingAccount && <button type="button" className="account-switch" onClick={() => { setMode(mode === 'register' ? 'signin' : 'register'); setError(''); setMessage(''); }}>{mode === 'register' ? 'Already registered? Sign in' : 'New to Style? Create an account'}</button>}
     </form>}
   </>;
 }

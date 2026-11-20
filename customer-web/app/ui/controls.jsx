@@ -6,7 +6,9 @@ export default function Controls() {
   const { language, setLanguage } = useLocale();
   const [light, setLight] = useState(false);
   useEffect(() => {
-    setLight(localStorage.getItem('style-theme') === 'light');
+    const savedLight = localStorage.getItem('style-theme') === 'light';
+    setLight(savedLight);
+    document.documentElement.dataset.theme = savedLight ? 'light' : 'dark';
   }, []);
   function changeLanguage(event) {
     const next = event.target.value;

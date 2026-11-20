@@ -4,6 +4,7 @@ USE style_rinero;
 CREATE TABLE IF NOT EXISTS users (
   id CHAR(36) PRIMARY KEY,
   email VARCHAR(254) NOT NULL UNIQUE,
+  email_verified_at DATETIME NULL,
   password_hash VARCHAR(200) NULL,
   display_name VARCHAR(160) NOT NULL,
   phone VARCHAR(32) NULL,
@@ -30,11 +31,28 @@ CREATE TABLE IF NOT EXISTS webauthn_challenges (
   id CHAR(36) PRIMARY KEY,
   challenge_hash BINARY(32) NOT NULL UNIQUE,
   user_id CHAR(36) NULL,
+  subject_email_hash BINARY(32) NULL,
   purpose ENUM('register','authenticate') NOT NULL,
   expires_at DATETIME NOT NULL,
   created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   CONSTRAINT fk_challenge_user FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
   INDEX ix_challenge_expiry (expires_at)
+) ENGINE=InnoDB;
+
+CREATE TABLE IF NOT EXISTS email_verification_tokens (
+  id CHAR(36) PRIMARY KEY,
+  email VARCHAR(254) NOT NULL,
+  token_hash BINARY(32) NOT NULL UNIQUE,
+  purpose ENUM('registration','existing') NOT NULL,
+  return_to ENUM('/account','/business-account') NOT NULL,
+  expires_at DATETIME NOT NULL,
+  verified_at DATETIME NULL,
+  consumed_at DATETIME NULL,
+  native_code_hash BINARY(32) NULL,
+  native_grant_hash BINARY(32) NULL,
+  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  INDEX ix_email_verification_email (email,created_at),
+  INDEX ix_email_verification_expiry (expires_at)
 ) ENGINE=InnoDB;
 
 CREATE TABLE IF NOT EXISTS sessions (

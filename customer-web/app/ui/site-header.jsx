@@ -10,7 +10,7 @@ export default function SiteHeader() {
   const home = pathname === '/';
   const href = (section) => home ? `#${section}` : `/#${section}`;
   return <header className={`topbar${home ? ' home-topbar' : ''}`}>
-    <Link className="brand" href="/" aria-label="Rstyle by Rinero home"><span className="brand-icon">R</span><span className="brand-wordmark">RSTYLE<small>BY RINERO</small></span></Link>
+    <Link className="brand" href="/" aria-label="Style by Rinero home"><img className="brand-icon brand-logo-image" src="/rinero-mark.png" alt=""/><span className="brand-wordmark">STYLE<small>BY RINERO</small></span></Link>
     <nav><Link href="/search"><T>Discover</T></Link><Link href={href('how')}><T>How it works</T></Link><Link href="/business"><T>For businesses</T></Link><Link href="/opportunities"><T>Jobs & chairs</T></Link></nav>
     <div className="top-actions"><Controls/><Link className="button button-orange small" href="/account"><T>Sign in</T></Link></div>
   </header>;
